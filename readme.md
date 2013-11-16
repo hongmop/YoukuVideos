@@ -1,4 +1,4 @@
-﻿<h3>YoukuVideos 1.0.7 测试版</h3>
+﻿<h3>YoukuVideos 1.0.7 Beta2</h3>
 ﻿
 ﻿<strong>欢迎大家pull request</strong>
 ﻿

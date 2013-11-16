@@ -269,29 +269,39 @@ class youku{
 	
 	public function display(){
 		$config = $this->config;
+		
 		$page_link = $this->get_pagelink();
+
 		$cat_slug = get_query_var('ykccat');
 		$cat_id = $cat_slug ? ($this->get_catid_by_slug($cat_slug)) : null;
+		
 		$per_page = $config["number"];
+		
 		$videos = $this->the_video($cat_id);
 		$count  = count($videos);
 		$max_page = ceil($count/$per_page);
+
 		$paged = get_query_var('paged') ? get_query_var('paged') : 1;
 		$result = array_slice( $videos,( ( $paged-1 )* $per_page ), $per_page );
+		
 		$index = 0;
 		$row = $config["row"];
+		
 		$all_class = !$cat_id ? "current" : "";
-		echo "<!-- Start Youku Videos V1.0.6 --><div id='ykv_youku-video'><div class='ykv_youku-nav'><ul><li class='{$all_class}'><a href='{$page_link}'>全部视频</a></li>";
+		
+		echo "<!-- Start Youku Videos V{VERSION} --><div id='ykv_youku-video'><div class='ykv_youku-nav'><ul><li class='{$all_class}'><a href='{$page_link}'>全部视频</a></li>";
+		
 		$category = $this->category;
 		if(!empty($category)){
 			foreach($category as $key => $val){
 				if(!empty($val)){
 					$class = ($cat_id && $cat_id==$key) ? "current" : "";
 				?>
-					<li class="<?=$class;?>"><a href="<?php echo $this->cat_link($val["slug"], $paged);?>"><?=$val["name"];?></a>
+					<li class="<?=$class;?>"><a href="<?php echo $this->cat_link($val["slug"]);?>"><?=$val["name"];?></a>
 				<?php }
 			}
-		}
+		}		
+		
 		echo "</ul></div><div class='ykv_video-group'><div class='ykv_video-clearfix'>";
 		foreach($result as $val){
 			$index++;
@@ -301,7 +311,7 @@ class youku{
 		}
 		echo "</div></div></div><div id='ykv_youku-pagenavi'>";
 		$this->pagenavi($max_page, $paged, $cat_slug);
-		echo "</div><!-- End Youku Videos V1.0.6 -->";
+		echo "</div><!-- End Youku Videos V{VERSION} -->";
 	}
 	
 	// pagenavi
@@ -336,13 +346,9 @@ class youku{
 		echo '<a class="ykv_page-youku" href="'.$link.'" title="'.$title.'">'.$linktext.'</a>';
 	}
 	
-	private function cat_link($cat_slug, $paged){
+	private function cat_link($cat_slug){
 		$page_link = $this->get_pagelink();
-		if( $paged > 1){
-			return get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug."&paged=".$paged): ($page_link.'/'.$cat_slug.'/page/'.$paged);
-		}else{
-			return get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug): ($page_link.'/'.$cat_slug);
-		}
+		return get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug): ($page_link.'/'.$cat_slug);
 	}	
 	
 	public function youku_scripts(){

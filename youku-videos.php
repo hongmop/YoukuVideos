@@ -8,7 +8,7 @@ Author: Mufeng
 Author URI: http://mufeng.me
 */
 
-define('YOUKUVIDEOS_VERSION', '1.0.7');
+define('VERSION', '1.0.7');
 require_once(dirname(__FILE__).'/function.php');
 
 ?>
