@@ -1,6 +1,6 @@
 <div class="wrap">
 	<h2 class="nav-tab-wrapper" class="clearfix">
-		<div id="youku_version">Version: <?php echo YOUKUVIDEOS_VERSION;?></div>
+		<div id="youku_version">Version: <?php echo VERSION;?></div>
     	<a href="<?php echo $this->get_menupage_url("youku-videos");?>" class="nav-tab">视频管理</a>
 		<a href="<?php echo $this->get_menupage_url("youku-category");?>" class="nav-tab">分类管理</a>
 		<a href="<?php echo $this->get_menupage_url("youku-newvideo");?>" class="nav-tab">添加视频</a>
@@ -25,6 +25,11 @@
 							?>
 						</select>
 						<strong> （分页需要，必须选择！）</strong>
+						<?php if($config_name){
+							$plink = $this->get_pagelink();
+						?>
+							<p class="description">页面地址：<a href="<?=$plink;?>" target="_blank"><?=$plink;?></a></p>
+						<?php }?>
 					</td>
 				</tr>
 				<tr valign="top">

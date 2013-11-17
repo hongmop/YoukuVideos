@@ -29,10 +29,10 @@ class youku{
 			if ( isset($_GET['page']) ) {
 			
 				if(  $_GET['page'] == 'youku-videos' || $_GET['page'] == 'youku-category' || $_GET['page'] == 'youku-newvideo' || $_GET['page'] == 'youku-option'){
-					wp_enqueue_style('youku-admin-css', $this->base_dir . '/scripts/youku-admin.css', false, YOUKUVIDEOS_VERSION, false);
+					wp_enqueue_style('youku-admin-css', $this->base_dir . '/scripts/youku-admin.css', false, VERSION, false);
 				}
 			
-				wp_enqueue_script( 'youku-videos-ajax', $this->base_dir . '/scripts/youku-videos-ajax.js', array(), YOUKUVIDEOS_VERSION, false);
+				wp_enqueue_script( 'youku-videos-ajax', $this->base_dir . '/scripts/youku-videos-ajax.js', array(), VERSION, false);
 				
 				$category = $this->category;
 				if(!empty($category)){
@@ -268,50 +268,40 @@ class youku{
 	}
 	
 	public function display(){
-		$config = $this->config;
-		
+		$config = $this->config;		
 		$page_link = $this->get_pagelink();
-
 		$cat_slug = get_query_var('ykccat');
 		$cat_id = $cat_slug ? ($this->get_catid_by_slug($cat_slug)) : null;
-		
 		$per_page = $config["number"];
-		
 		$videos = $this->the_video($cat_id);
 		$count  = count($videos);
 		$max_page = ceil($count/$per_page);
-
 		$paged = get_query_var('paged') ? get_query_var('paged') : 1;
-		$result = array_slice( $videos,( ( $paged-1 )* $per_page ), $per_page );
-		
+		$result = array_slice( $videos,( ( $paged-1 )* $per_page ), $per_page );		
 		$index = 0;
-		$row = $config["row"];
-		
-		$all_class = !$cat_id ? "current" : "";
-		
-		echo "<!-- Start Youku Videos V{VERSION} --><div id='ykv_youku-video'><div class='ykv_youku-nav'><ul><li class='{$all_class}'><a href='{$page_link}'>全部视频</a></li>";
-		
+		$row = $config["row"];	
+		$all_class = !$cat_id ? "current" : "";		
+		echo "<!-- Start Youku Videos V".VERSION." --><div id='ykv_youku-video'><div class='ykv_youku-nav'><ul><li class='{$all_class}'><a href='{$page_link}'>全部视频</a></li>";		
 		$category = $this->category;
 		if(!empty($category)){
 			foreach($category as $key => $val){
 				if(!empty($val)){
 					$class = ($cat_id && $cat_id==$key) ? "current" : "";
 				?>
-					<li class="<?=$class;?>"><a href="<?php echo $this->cat_link($val["slug"]);?>"><?=$val["name"];?></a>
+					<li class="<?=$class;?>"><a href="<?php echo $this->get_cat_link($val["slug"]);?>"><?=$val["name"];?></a>
 				<?php }
 			}
 		}		
-		
 		echo "</ul></div><div class='ykv_video-group'><div class='ykv_video-clearfix'>";
 		foreach($result as $val){
 			$index++;
 			$class = $index%$row == 0 ? "ykv_video ykv_video-last" : "ykv_video";
-			?><a href="#<?php echo $val["youkuid"];?>" class="<?=$class;?>" title="<?php echo $val["title"];?>" youkuid="<?php echo $val["youkuid"];?>"><img class="ykv_video-image" src="<?php echo $val["thumbnail"];?>" alt="<?php echo $val["title"];?>" /><span class="ykv_video-text"><?php echo $val["title"];?></span><?php if($config["time"]) echo "<span class='ykv_video-date'>{$val["strtime"]}</span>";?></a><?php
+			?><a href="javascript:void(0)" class="<?=$class;?>" title="<?php echo $val["title"];?>" youkuid="<?php echo $val["youkuid"];?>"><img class="ykv_video-image" src="<?php echo $val["thumbnail"];?>" alt="<?php echo $val["title"];?>" /><span class="ykv_video-text"><?php echo $val["title"];?></span><?php if($config["time"]) echo "<span class='ykv_video-date'>{$val["strtime"]}</span>";?></a><?php
 			if( $index%$row==0 && $index < $per_page) echo "</div></div><div class='ykv_video-group'><div class='ykv_video-clearfix'>";
 		}
 		echo "</div></div></div><div id='ykv_youku-pagenavi'>";
 		$this->pagenavi($max_page, $paged, $cat_slug);
-		echo "</div><!-- End Youku Videos V{VERSION} -->";
+		echo "</div><!-- End Youku Videos V".VERSION." -->";
 	}
 	
 	// pagenavi
@@ -326,36 +316,36 @@ class youku{
 		if ( $paged < $max_page ) $this->page_link( $paged + 1,'»', $cat_slug);			
 	}
 	
-	private function page_link($i, $title = "", $cat_slug){
+	private function page_link($i, $title = "", $cat_slug, $admin=null){
 		$page_link = $this->get_pagelink();
 		if ( $title == '' ){$title = "第 {$i} 页";$linktext = $i;}else{$linktext = $title;}
-		
-		if( $i>1 ){
-			if( $cat_slug ){
-				$link = get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug."&paged=".$i): ($page_link.'/'.$cat_slug.'/page/'.$i);
+		if(!$admin){
+			if( $i>1 ){
+				if( $cat_slug ){
+					$link = get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug."&paged=".$i): ($page_link.'/'.$cat_slug.'/page/'.$i);
+				}else{
+					$link = get_query_var("page_id") ? ($page_link."&paged=".$i): ($page_link.'/page/'.$i);
+				}
 			}else{
-				$link = get_query_var("page_id") ? ($page_link."&paged=".$i): ($page_link.'/page/'.$i);
+				if( $cat_slug ){
+					$link = get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug): ($page_link.'/'.$cat_slug);
+				}else{
+					$link = $page_link;
+				}
 			}
+			echo '<a class="ykv_page-youku" href="'.$link.'" title="'.$title.'">'.$linktext.'</a>';
 		}else{
-			if( $cat_slug ){
-				$link = get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug): ($page_link.'/'.$cat_slug);
-			}else{
-				$link = $page_link;
-			}
+			$link = $page_link."#".$title;
+			if( $i>1 ) $link = get_query_var("page_id") ? ($page_link."&paged=".$i."#".$title): ($page_link.'/page/'.$i."#".$title);
+			return $link;
 		}
-		echo '<a class="ykv_page-youku" href="'.$link.'" title="'.$title.'">'.$linktext.'</a>';
-	}
-	
-	private function cat_link($cat_slug){
-		$page_link = $this->get_pagelink();
-		return get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug): ($page_link.'/'.$cat_slug);
 	}	
 	
 	public function youku_scripts(){
 		$config = $this->config;
-		if( !$config["css"] ) wp_enqueue_style('youku-css', $this->base_dir . '/scripts/youku.css', array(), YOUKUVIDEOS_VERSION, 'screen');
+		if( !$config["css"] ) wp_enqueue_style('youku-css', $this->base_dir . '/scripts/youku.css', array(), VERSION, 'screen');
 		if( !$config["js"] ){
-			wp_enqueue_script( 'youku-js', $this->base_dir . '/scripts/youku.js', array(), YOUKUVIDEOS_VERSION, false);
+			wp_enqueue_script( 'youku-js', $this->base_dir . '/scripts/youku.js', array(), VERSION, false);
 			wp_localize_script( 'youku-js', 'youkujs', array("swfurl" => ($config["swf_url"] ? $config["swf_url"] : "") ));
 		}
 	}
@@ -452,28 +442,19 @@ class youku{
 			'index.php?pagename='.$config_name.'&ykccat=$matches[1]&paged=$matches[2]',
 			'top'
 		);
+		flush_rewrite_rules();
 	}
 	
-	private function get_pagelink(){
+	public function get_pagelink(){
 		$config = $this->config;
 		$slug = $config["pagename"];		
 		if($slug){
-			return get_permalink( get_page_by_path($slug) );
+			$slug = get_permalink( get_page_by_path($slug) );
+			$slug = rtrim($slug,'/\\');
+			return $slug;
 		}
 		return false;
 	}
-	
-	private function get_catid_by_slug($slug){
-		$category = $this->category;
-		if(!empty($category) && $slug){
-			foreach($category as $key => $val){
-				if(!empty($val)){
-					if($val["slug"] == $slug) return $key;
-				}
-			}
-		}
-		return false;
-	}	
 	
 	public function category_count($cat_id){
 		$index = 0;
@@ -483,8 +464,6 @@ class youku{
 		}
 		return $index;
 	}
-	
-	
 	
 	public function the_video($cat_id=null){
 		$videos = $this->videos;
@@ -499,6 +478,39 @@ class youku{
 		}
 		$videos = $this->reverse_array($videos);
 		return $videos;
+	}	
+	
+	private function get_cat_link($cat_slug){
+		$page_link = $this->get_pagelink();
+		return get_query_var("page_id") ? ($page_link."&ykccat=".$cat_slug): ($page_link.'/'.$cat_slug);
+	}
+	
+	private function get_catid_by_slug($slug){
+		$category = $this->category;
+		if(!empty($category) && $slug){
+			foreach($category as $key => $val){
+				if(!empty($val)){
+					if($val["slug"] == $slug) return $key;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public function the_cat_link($cat_name=null, $cat_id=null){
+		$manage_link = $this->get_menupage_url("youku-videos");
+		return sprintf('<a href="%s&category=%s">%s</a>', $manage_link, $cat_id, $cat_name);
+	}
+	
+	public function the_video_link($video_id, $video_hash){
+		$config = $this->config;
+		$per_page = $config["number"];
+		
+		$videos = $this->the_video();
+		$count  = count($videos);
+		
+		$paged = floor(($count-$video_id+1)/$per_page);
+		return $this->page_link($paged, $video_hash, null, true);
 	}
 }
 

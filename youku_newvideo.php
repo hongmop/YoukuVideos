@@ -1,6 +1,6 @@
 <div class="wrap">
 	<h2 class="nav-tab-wrapper" class="clearfix">
-		<div id="youku_version">Version: <?php echo YOUKUVIDEOS_VERSION;?></div>
+		<div id="youku_version">Version: <?php echo VERSION;?></div>
     	<a href="<?php echo $this->get_menupage_url("youku-videos");?>" class="nav-tab">视频管理</a>
 		<a href="<?php echo $this->get_menupage_url("youku-category");?>" class="nav-tab">分类管理</a>
 		<a href="<?php echo $this->get_menupage_url("youku-newvideo");?>" class="nav-tab nav-tab-active">添加视频</a>

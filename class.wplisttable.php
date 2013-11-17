@@ -22,20 +22,23 @@ class YKV_List_Table extends WP_List_Table {
   function column_default( $item, $column_name ) {
    global $YKV;
 	$category = $YKV->category; 
+	$cat_id = $item["category"] ? $item["category"] : 1;
+	$cat_name = $category[$cat_id]["name"];	
     switch( $column_name ) { 
         case 'title':
+			return sprintf( '<a href="%s" target="_blank">%s</a>', $video_link, $item[ $column_name ] );
+			break;
 		case 'strtime':
             return $item[ $column_name ];
 			break;
 		case 'category':
-			$cat_index = $item[$column_name] ? $item[$column_name] : 1;
-			return $category[$cat_index]["name"];
+			return $YKV->the_cat_link($cat_name, $cat_id);
 			break;
 		case 'created':  
 			return date("Y-m-d G:i", $item[ $column_name ]);
 			break;			
         default:
-            return print_r( $item, true ) ; //Show the whole array for troubleshooting purposes
+            return sprintf( $item, true ) ; //Show the whole array for troubleshooting purposes
     }
   }
 
@@ -72,12 +75,16 @@ function usort_reorder( $a, $b ) {
 }
 
 function column_title($item){
+	global $YKV;
 	$cat_id = $item['category'] ? $item['category'] : 0;
+	$video_id = $item["ID"];
+	$video_hash = $item["youkuid"];
+	$video_link = $YKV->the_video_link($video_id, $video_hash);
   $actions = array(
 	'delete'=> sprintf('<a href="?page=%s&action=%s&videoid=%s">删除</a>', $_REQUEST['page'], 'ykv-delete', $item['ID']),
 	'edit' => sprintf('<a href="javascript:void(0);" class="ykc-edit" yktitle="%s" youkuid="%s" catid="%s">快速编辑</a>', $item['title'], $item['ID'], $cat_id)
 	);
-  return sprintf('<span class="title">%1$s</span> %2$s', $item['title'], $this->row_actions($actions) );
+  return sprintf('<span class="title"><a href="%1$s" target="_blank">%2$s</a></span> %3$s', $video_link, $item['title'], $this->row_actions($actions) );
 }
 
 function get_bulk_actions() {
