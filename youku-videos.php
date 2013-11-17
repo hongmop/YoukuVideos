@@ -8,7 +8,7 @@ Author: Mufeng
 Author URI: http://mufeng.me
 */
 
-define('VERSION', '1.0.7 Beta3');
+define('VERSION', '1.0.7 Beta4');
 require_once(dirname(__FILE__).'/function.php');
 
 ?>
