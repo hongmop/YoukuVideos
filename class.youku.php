@@ -151,7 +151,7 @@ class youku{
 			$videos = $this->videos;
 			$cat_id = intval($_POST["new-category"]) > 0 ? intval($_POST["new-category"]) : 1;
 			
-			$new_video = array("ID" => count($videos),"title" => ($title? $title : $detail["title"]),"created" => (time()  + (60*60*get_settings("gmt_offset"))),"thumbnail" => $detail["thumbnail"],"youkuid" => $detail["youkuid"],"strtime" => $detail["seconds"],"category" => $cat_id);
+			$new_video = array("ID" => count($videos),"title" => ($title? $title : $detail["title"]),"created" => (time()  + (60*60*get_settings("gmt_offset"))),"thumbnail" => $detail["thumbnail"],"youkuid" => $detail["youkuid"],"strtime" => $detail["seconds"],"category" => $cat_id,"streamfileids" =>count($detail["streamtypes"]));
 			
 			$videos[] = $new_video;
 			$this->update_videos($videos);
@@ -295,8 +295,14 @@ class youku{
 		echo "</ul></div><div class='ykv_video-group'><div class='ykv_video-clearfix'>";
 		foreach($result as $val){
 			$index++;
+			if($val["streamfileids"]==3)
+			{$definition ="<i class='hd2'>超清</i>";}
+			elseif($val["streamfileids"]==2)
+			{$definition ="<i class='mp4'>高清</i>";}
+			else
+			{$definition="";}
 			$class = $index%$row == 0 ? "ykv_video ykv_video-last" : "ykv_video";
-			?><a href="javascript:void(0)" class="<?=$class;?>" title="<?php echo $val["title"];?>" youkuid="<?php echo $val["youkuid"];?>"><img class="ykv_video-image" src="<?php echo $val["thumbnail"];?>" alt="<?php echo $val["title"];?>" /><span class="ykv_video-text"><?php echo $val["title"];?></span><?php if($config["time"]) echo "<span class='ykv_video-date'>{$val["strtime"]}</span>";?></a><?php
+			?><a href="javascript:void(0)" class="<?=$class;?>" title="<?php echo $val["title"];?>" youkuid="<?php echo $val["youkuid"];?>"><img class="ykv_video-image" src="<?php echo $val["thumbnail"];?>" alt="<?php echo $val["title"];?>" /><span class="ykv_video-text"><?php echo $val["title"];?></span><?php if($config["time"]) echo "<span class='ykv_video-date'>{$val["strtime"]}</span>";?><?php echo $definition ?></a><?php
 			if( $index%$row==0 && $index < $per_page) echo "</div></div><div class='ykv_video-group'><div class='ykv_video-clearfix'>";
 		}
 		echo "</div></div></div><div id='ykv_youku-pagenavi'>";
@@ -375,7 +381,7 @@ class youku{
 			$hour = floor( $json["seconds"]/3600 );
 			$hour = $hour > 0 ? "{$hour}:" : "";
 			$ltime = $hour . gmstrftime('%M:%S', $json["seconds"]);			
-			$array = array("created" => time(),"thumbnail" => $json['logo'],"title" => $json['title'],"youkuid" => $youku_id,"seconds" => $ltime);
+			$array = array("created" => time(),"thumbnail" => $json['logo'],"streamtypes"=> $json['streamtypes'],"title" => $json['title'],"youkuid" => $youku_id,"seconds" => $ltime);
 			return $array;
 		} else {
 			return false;
