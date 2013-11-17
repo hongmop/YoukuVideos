@@ -3,7 +3,7 @@
 ﻿<strong>欢迎大家pull request</strong>
 ﻿
 ﻿
-﻿<h2>YoukuVideos 1.0.7 更新历史</h2>
+﻿<h4>YoukuVideos 1.0.7 更新历史</h4>
 ﻿
 <p>2013.11.17 | 1.0.7 Beta3<br>
 1. youku.js domready部分重写；<br>
