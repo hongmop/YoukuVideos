@@ -1,10 +1,4 @@
-﻿<h3>YoukuVideos 1.0.7 Beta3</h3>
-﻿
-﻿<strong>欢迎大家pull request</strong>
-﻿
-﻿
-﻿<h4>YoukuVideos 1.0.7 更新历史</h4>
-﻿
+﻿<h3>YoukuVideos 1.0.7 更新历史</h3>
 <p>2013.11.17 | 1.0.7 Beta3<br>
 1. youku.js domready部分重写；<br>
 2. 修复分类导航、底部翻页的链接尾部“双斜线“；<br>
