@@ -351,8 +351,8 @@ class youku{
 		$config = $this->config;
 		if( !$config["css"] ) wp_enqueue_style('youku-css', $this->base_dir . '/scripts/youku.css', array(), VERSION, 'screen');
 		if( !$config["js"] ){
-			wp_enqueue_script( 'youku-js', $this->base_dir . '/scripts/youku.js', array(), VERSION, false);
-			wp_localize_script( 'youku-js', 'youkujs', array("swfurl" => ($config["swf_url"] ? $config["swf_url"] : "") ));
+			wp_enqueue_script( 'youku-js', $this->base_dir . '/scripts/youku.js', array(), VERSION, true);
+			//wp_localize_script( 'youku-js', 'youkujs', array("swfurl" => ($config["swf_url"] ? $config["swf_url"] : "") ));
 		}
 	}
 	

@@ -72,8 +72,7 @@
 				<tr valign="top">
 					<th scope="row"><label for="swf_url">6. Flash 播放器地址</label></th>
 					<td>
-						<textarea id="swf_url" cols="80" rows="2" type="text" name="swf_url"><?=$config["swf_url"];?></textarea>
-						<p class="description">默认为：<code>优酷自带播放器</code>，无广告播放器可以从<a href="http://mufeng.me/youku-videos.html" target="_blank">http://mufeng.me/youku-videos.html</a>来获取，<br />也自行可以上传 <code> loader.swf + player.swf </code>，然后将<code>loader.swf</code>的地址填写到上面的输入框！</p>
+						<p class="description">去广告失效，本功能删除！</p>
 					</td>
 				</tr>				
 				<tr valign="top">

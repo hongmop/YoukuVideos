@@ -12,7 +12,7 @@
 		<table class="form-table">
 			<tbody>
 				<tr valign="top">
-					<th scope="row"><label for="new-url">1. Youku 视频地址</label></th>
+					<th scope="row"><label for="new-url"><strong>1. Youku 视频地址</strong></label></th>
 					<td>
 						<input id="new-url" type="text" class="regular-text code" name="new-url" />
 					</td>

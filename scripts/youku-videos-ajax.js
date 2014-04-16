@@ -74,7 +74,7 @@ jQuery(document).ready(function(jQuery){
 			success: function(){
 				var a = jQuery("#the-list tr.ykchidden").first().find(".title.column-title"),
 					b = jQuery("#the-list tr.ykchidden").first().find(".category.column-category"),
-					c = a.children("span.title"),
+					c = a.children("span.title").children("a"),
 					d = a.find(".ykc-edit");
 				
 				c.text(title);		
